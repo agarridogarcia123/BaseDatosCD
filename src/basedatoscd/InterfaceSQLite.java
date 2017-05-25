@@ -1,7 +1,7 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * This class configures the database
+ * 
+ * 
  */
 package basedatoscd;
 
@@ -10,50 +10,67 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author agarridogarcia
  */
+
+
+
+
 public class InterfaceSQLite {
-    private String url="jdbc:sqlite:ejemploBase.db";
+
+    public InterfaceSQLite(String url) throws ClassNotFoundException, SQLException {
+        this.url=url;
+        conectar();
+        Statement statement= connection.createStatement();
+        statement.executeUpdate("drop table if exists alumno");
+        statement.executeUpdate("create table alumno(dni integer, nombre string)");
+       
+    }
+    
+    private String url;
     Connection connection; 
+    
 
     
-    
+    /**
+     * 
+     * @return boolean: true if it can connect or false 
+     * @throws ClassNotFoundException 
+     */
 
     
     public boolean conectar() throws ClassNotFoundException{
-    
-        
-        Class.forName("org.sqlite.JDBC");
-     
-        
         
         try{ 
-     connection=DriverManager.getConnection(url);
-      return true;
-     }catch( SQLException e){
+       connection=DriverManager.getConnection(url);
+       return true;
+       }catch( SQLException e){
          return false;
-     }
-    }
+       }
+       }
     
     
     /**
-     * insert tables and lines
+     * 
+     * @param insert:  insert tables and lines 
+     * 
      * @throws SQLException 
      */
    
-    public void insert() throws SQLException{
+    public boolean insert(int dni, String nombre ) throws SQLException{
+         String pedir="insert into alumno values("+ dni + ", '" + nombre + "')";
          Statement statement=connection.createStatement();
-         statement.executeUpdate("drop table if exists alumno");
-         statement.executeUpdate("create table alumno(dni integer, nombre string)");
-         statement.executeUpdate("insert into alumno values(3456,'Ana')");
-         
+        statement.executeUpdate(pedir);
+//         statement.executeUpdate("insert into alumno values(123,'Ana')");
+
     }
 
     /**
-     * 
+     * consultar() is for search in the database
      * @throws SQLException 
      */
     public void consultar() throws SQLException{
@@ -65,15 +82,22 @@ public class InterfaceSQLite {
        }
            
     }
-    public void cerrar(){
+    /**
+     * cerrarBD is for close the database
+     */
+    public void cerrarBD(){
       try{
         if(connection != null)
           connection.close();
           System.out.println("Base de datos cerrada.");
       }catch(SQLException e){
-        // connection close failed.
-        System.err.println(e);
+       System.err.println("Error no se puede cerrar la base de datos"+e);
       }
+    }
+    
+    public void borrar(String borrar) throws SQLException{
+        Statement stat=connection.createStatement();
+        stat.executeUpdate(borrar);
     }
 }
     
