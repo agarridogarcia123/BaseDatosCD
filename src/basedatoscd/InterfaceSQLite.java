@@ -15,13 +15,24 @@ import javax.swing.JOptionPane;
 /**
  *
  * @author agarridogarcia
+ * @version 31/05/2017
  */
 
 
 
 
 public class InterfaceSQLite {
-
+      
+    
+    private String url;
+    Connection connection; 
+    
+/**
+ * 
+ * @param url save the path we have for the BD
+ * @throws ClassNotFoundException
+ * @throws SQLException 
+ */
     public InterfaceSQLite(String url) throws ClassNotFoundException, SQLException {
         this.url=url;
         conectar();
@@ -30,12 +41,12 @@ public class InterfaceSQLite {
         statement.executeUpdate("create table alumno(dni integer, nombre string)");
        
     }
-    
-    private String url;
-    Connection connection; 
-    
-
-    
+/**
+ * default constructor
+ */
+    public InterfaceSQLite() {
+    }
+  
     /**
      * 
      * @return boolean: true if it can connect or false 
@@ -62,10 +73,15 @@ public class InterfaceSQLite {
      */
    
     public boolean insert(int dni, String nombre ) throws SQLException{
-         String pedir="insert into alumno values("+ dni + ", '" + nombre + "')";
+        try{ 
+        String pedir="insert into alumno values("+ dni + ", '" + nombre + "')";
          Statement statement=connection.createStatement();
         statement.executeUpdate(pedir);
-//         statement.executeUpdate("insert into alumno values(123,'Ana')");
+        return true;
+        }catch(SQLException e){
+                return false;
+                }
+
 
     }
 
@@ -80,7 +96,7 @@ public class InterfaceSQLite {
            System.out.println("dni="+rs.getInt("dni"));
            System.out.println("nombre="+rs.getString("nombre"));
        }
-           
+          
     }
     /**
      * cerrarBD is for close the database
@@ -94,7 +110,11 @@ public class InterfaceSQLite {
        System.err.println("Error no se puede cerrar la base de datos"+e);
       }
     }
-    
+    /**
+     * allow us to delete info in the DB
+     * @param borrar save the parameters we want to delete
+     * @throws SQLException 
+     */
     public void borrar(String borrar) throws SQLException{
         Statement stat=connection.createStatement();
         stat.executeUpdate(borrar);
