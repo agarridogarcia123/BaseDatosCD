@@ -51,7 +51,7 @@ public class BaseDatosCD {
                 break;
             case 5:mibd.cerrarBD();System.exit(0);
                 break;
-//           
+         
             
         }
     

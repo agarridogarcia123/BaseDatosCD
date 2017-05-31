@@ -79,6 +79,7 @@ public class InterfaceSQLite {
         statement.executeUpdate(pedir);
         return true;
         }catch(SQLException e){
+            System.out.println("No se ha podido guardar");
                 return false;
                 }
 
